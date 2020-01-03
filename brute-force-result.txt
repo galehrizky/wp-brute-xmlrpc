@@ -1,1 +1,1 @@
-
+success login with username [admin] and password [admin] sites http://localhost/wordpress/
