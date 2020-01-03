@@ -1,14 +1,31 @@
-# Modules Prestashop Vuln Arbitrary File Upload
-<img src="screenshot/screen.PNG">
 
-## install
-* Fork this repository (Click the Fork button in the top right of this page, click your Profile Image)
-* Clone your fork down to your local machine
+## Multiple Brute Force XMLRPC [Wordpress] 
+<a href="http://c0delabs.com/"><img src="screenshoot/brute.PNG" title="Multiple Brute Force XMLRPC [Wordpress] " alt="Multiple Brute Force XMLRPC [Wordpress] "></a>
 
-```markdown
-git clone https://github.com/galehrizky/prestashop-auto-exploit.git
-cd prestashop-auto-exploit
-pip install -r requirements.txt
-prestashop.py list.txt
+### Clone
 
+- Clone this repo to your local machine using `git clone https://github.com/galehrizky/wp-brute-xmlrpc.git`
+
+### Install
+
+```shell
+$ cd wp-brute-xmlrpc
+$ pip install -r requirements.txt
 ```
+
+### Usage (Python 3)
+
+```shell
+$ python wp_brute.py -h (show this help message and exit)
+$ python wp_brute.py --list list.txt (list.txt -> list url/website victim)
+```
+## Feature
+
+- Brute Force xmlrpc.php 
+- Auto get username from victim
+## License
+
+[![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
+
+- **[MIT license](http://opensource.org/licenses/mit-license.php)**
+- Copyright 2019 © <a href="http://c0delabs.com/" target="_blank">c0delabs.com</a>.
