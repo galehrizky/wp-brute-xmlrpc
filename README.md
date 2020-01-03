@@ -4,12 +4,12 @@
 
 ### Clone
 
-- Clone this repo to your local machine using `git clone https://github.com/galehrizky/wp-brute.git`
+- Clone this repo to your local machine using `git clone https://github.com/galehrizky/wp-brute-xmlrpc.git`
 
 ### Install
 
 ```shell
-$ cd wp-brute
+$ cd wp-brute-xmlrpc
 $ pip install -r requirements.txt
 ```
 
