@@ -16,7 +16,8 @@ $ pip install -r requirements.txt
 ### Usage (Python 3)
 
 ```shell
-$ python wp_brute.py -h
+$ python wp_brute.py -h (show this help message and exit)
+$ python wp_brute.py --list list.txt (list.txt -> list url/website victim)
 ```
 
 
