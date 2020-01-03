@@ -19,8 +19,10 @@ $ pip install -r requirements.txt
 $ python wp_brute.py -h (show this help message and exit)
 $ python wp_brute.py --list list.txt (list.txt -> list url/website victim)
 ```
+## Feature
 
-
+- Brute Force xmlrpc.php 
+- Auto get username from victim
 ## License
 
 [![License](http://img.shields.io/:license-mit-blue.svg?style=flat-square)](http://badges.mit-license.org)
