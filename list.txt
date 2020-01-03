@@ -1,1 +1,2 @@
-http://localhost/wordpress/
+https://codelatte.org/
+http://localhost/wordpress
